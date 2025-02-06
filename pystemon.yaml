@@ -94,9 +94,9 @@ search:
 
   - search: '[^a-zA-Z0-9]example\.com'
   - search: '[^a-zA-Z0-9]foobar\.com'
-  - description: 'Download (non-porn)'
+  - description: 'Download (non-p)'
     search: 'download'
-    exclude: 'porn|sex|teen'
+    exclude: 'p|s|t'
     count: 4
 
 #####
@@ -104,23 +104,6 @@ search:
 #
 threads: 1              # number of download threads per site
 site:
-#  example.com:
-#    archive-url:       # the url where the list of last pasties is present
-#                       # example: 'http://pastebin.com/archive'
-#    archive-regex:     # a regular expression to extract the pastie-id from the page.
-#                       # do not forget the () to extract the pastie-id
-#                       # example: '<a href="/(\w{8})">.+</a></td>'
-#    download-url:      # url for the raw pastie.
-#                       # Should contain {id} on the place where the ID of the pastie needs to be placed
-#                       # example: 'http://pastebin.com/raw.php?i={id}'
-#    public-url:        # optional, defaults to be the same as download-url, so it should meet the same requirements
-#                       # is used for display in logging and e-mail notifications
-#    update-max: 40     # every X seconds check for new updates to see if new pasties are available
-#    update-min: 30     # a random number will be chosen between these two numbers
-#    throttling: 0      # Number of MILLIseconds to wait between downloads
-#    pastie-classname:  # OPTIONAL: The name of a custom Class that inherits from Pastie
-#                       # This is practical for sites that require custom fetchPastie() functions
-
   pastebin.com:
     enable: no
     archive-url: 'https://pastebin.com/archive'
@@ -143,27 +126,6 @@ site:
     update-min: 40
     throttling: 1000
 
-  slexy.org:
-    # note: they don't like scraping. Tuning of update-max and update-min is needed!
-    # You will likely also want to enable random user-agent and proxies(see below).
-    # See https://slexy.org/tos for more information
-    enable: no
-    archive-url: 'https://slexy.org/recent'
-    archive-regex: '<a href="/view/([a-zA-Z0-9]+)">View paste</a>'
-    download-url: 'https://slexy.org/view/{id}'
-    pastie-classname: PastieSlexyOrg
-    update-max: 50
-    update-min: 40
-    throttling: 5000
-
-  gist.github.com:
-    enable: no
-    archive-url: 'https://gist.github.com/discover'
-    archive-regex: '<a href="/([A-Za-z0-9]+/[A-Za-z0-9]+)">'
-    download-url: 'https://gist.githubusercontent.com/{id}/raw/'
-    throttling: 5000
-
-
   codepad.org:
     enable: yes
     archive-url: 'http://codepad.org/recent'
@@ -171,42 +133,6 @@ site:
     download-url: 'http://codepad.org/{id}/raw.txt'
     throttling: 5000
 
-  paste.org.ru:
-    enable: no
-    archive-url: 'http://paste.org.ru'
-    archive-regex: '<a href=''/\?(\w+)''>'
-    download-url: 'http://paste.org.ru/?{id}'
-    pastie-classname: PastiePasteOrgRu
-    throttling: 5000
- 
-  kpaste.net:
-    enable: no
-    archive-url: 'http://kpaste.net/'
-    archive-regex: '" href="/(\w+)">'
-    download-url: 'http://kpaste.net/{id}?raw'
-    throttling: 5000
-
-  ideone.com:
-    enable: no
-    archive-url: 'https://ideone.com/recent'
-    archive-regex: '<a href="/([a-zA-Z0-9]+)">#'
-    download-url: 'https://ideone.com/plain/{id}'
-    throttling: 5000
-
-  pastebin.fr:
-    enable: no
-    archive-url: 'http://pastebin.fr'
-    archive-regex: '<a href="http://pastebin.fr/(\d+)'
-    download-url: 'http://pastebin.fr/pastebin.php?dl={id}'
-    throttling: 5000
-
-  pastebin.gr:
-    enable: no
-    archive-url: 'http://pastebin.gr/archive'
-    archive-regex: '<td><a href="(\d+)" title='
-    download-url: 'http://pastebin.gr/paste.php?download&id={id}'
-    throttling: 5000
-    
   pastebin.pl:
     enable: no
     archive-url: 'https://pastebin.pl/lists'
@@ -223,73 +149,6 @@ site:
     download-url: 'https://pastebin.berylia.org/api/paste/{id}'
     pastie-classname: PastieBerylia
     throttling: 5000
-
-
-# Sites that are offline:
-  # pastesite.com:
-  #   pastie-classname: PastiePasteSiteCom
-  #   archive-url: 'http://pastesite.com/recent'
-  #   archive-regex: '<a href="(\d+)" title="View this Paste'
-  #   download-url: 'http://pastesite.com/plain/{id}.txt'
-
-  # pastie.org:
-  #   archive-url: 'http://pastie.org/pastes'
-  #   archive-regex: '<a href="http://pastie.org/pastes/(\d+)">'
-  #   download-url: 'http://pastie.org/pastes/{id}/text'
-
-  # pastebin.ca:
-  #   archive-url: 'http://pastebin.ca'
-  #   archive-regex: 'rel="/preview.php\?id=(\d+)'
-  #   download-url: 'http://pastebin.ca/{id}'
-
-  # pastebin.ru:
-  #   enable: no
-  #   archive-url: 'http://pastebin.ru/'
-  #   archive-regex: '<a href="/(\w+)">'
-  #   download-url: 'http://pastebin.ru/{id}'
-
-  # nopaste.me:
-  #  archive-url: 'http://nopaste.me/recent'
-  #  archive-regex: '<a href="http://nopaste.me/paste/([a-zA-Z0-9]+)">'
-  #  download-url: 'http://nopaste.me/download/{id}.txt'
-
-  # cdv.lt:
-  #  pastie-classname: PastieCdvLt
-  #  archive-url: 'http://cdv.lt/snippets'
-  #  archive-regex: '<a href="/([a-zA-Z0-9]+)">[0-9]'
-  #  download-url: 'http://cdv.lt/api/snippet/{id}'
-
-  # snipt.net:
-  #   pastie-classname: PastieSniptNet
-  #   archive-url: 'https://snipt.net/public/?rss'
-  #   archive-regex: '<link>https://snipt.net/(.+)/</link>'
-  #   download-url: 'https://snipt.net/{id}/'
-
-  # quickleak.se:
-  #   archive-url: 'http://www.quickleak.se/last-pastes.html'
-  #   archive-regex: '<td><a href="([A-Za-z0-9]+)">'
-  #   download-url: 'http://www.quickleak.se/{id}'
-
-#  safebin.net:  # FIXME not finished
-#    archive-url: 'http://safebin.net/?archive'
-#    archive-regex: '<a title="[a-zA-Z0-9 :,]+" href="/([0-9]+)">'
-#    download-url: 'http://safebin.net/{id}'
-#    update-max: 60
-#    update-min: 50
-
-
-# TODO
-# http://www.safebin.net/       # more complex site
-# http://www.heypasteit.com/    # http://www.heypasteit.com/clip/0IZA => incremental
-
-# http://hastebin.com/          # no list of last pastes
-# http://sebsauvage.net/paste/  # no list of last pastes
-# http://tny.cz/                # no list of last pastes
-# https://pastee.org/           # no list of last pastes
-# http://paste2.org/            # no list of last pastes
-# http://0bin.net/              # no list of last pastes
-# http://markable.in/           # no list of last pastes
-
 
 #####
 # Configuration section to configure proxies
