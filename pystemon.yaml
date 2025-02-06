@@ -57,7 +57,7 @@ storage:
 
   telegram:
     storage-classname:    TelegramStorage
-    enable: yes            # Activer ce moteur d'alerte
+    enable: no            # Activer ce moteur d'alerte
     token: 0              # voir https://core.telegram.org/bots/api#authorizing-your-bot
     chat-id: 0
 
