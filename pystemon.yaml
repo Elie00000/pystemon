@@ -1,45 +1,45 @@
-network:               # Network settings
-  ip: '172.17.85.12'        # Specify source IP address if you want to bind on a specific one
+network:               # Paramètres réseau
+  ip: '172.17.85.12'        # Spécifiez l'adresse IP source si vous souhaitez vous lier à une adresse spécifique
 
 pid:
   filename: '/var/run/pystemon.pid'
 
-engine: re              # Only re (default) or regex (pip install regex) are supported.
-strict_regex: no        # when compiling regex, hard fail or not on error
+engine: re              # Seuls re (par défaut) ou regex (pip install regex) sont pris en charge.
+strict_regex: no        # lors de la compilation des regex, échouer ou non en cas d'erreur
 
-save-thread: no         # Use a separate thread to save pasties
+save-thread: no         # Utiliser un thread séparé pour sauvegarder les pasties
 
-logging-level: INFO     # Define logging level (NOTSET, DEBUG, INFO, WARNING, ERROR, CRITICAL)
+logging-level: INFO     # Définir le niveau de journalisation (NOTSET, DEBUG, INFO, WARNING, ERROR, CRITICAL)
 
 storage:
 
   archive:
     storage-classname:    FileStorage
-    save: yes             # Keep a copy of pasties that triggered alerts
-    save-all: yes         # Keep a copy of all pasties
-    dir: "alerts"         # Directory where matching pasties should be kept
-    dir-all: "archive"    # Directory where all pasties should be kept (if save-all is set to yes)
-    compress: yes         # Store the pasties compressed
+    save: yes             # Conserver une copie des pasties qui ont déclenché des alertes
+    save-all: yes         # Conserver une copie de tous les pasties
+    dir: "alerts"         # Répertoire où les pasties correspondants doivent être conservés
+    dir-all: "archive"    # Répertoire où tous les pasties doivent être conservés (si save-all est défini sur yes)
+    compress: yes         # Stocker les pasties compressés
 
-  sqlite3:              # Store information about the pastie in a database
+  sqlite3:              # Stocker les informations sur le pastie dans une base de données
     storage-classname:    Sqlite3Storage
-    enable: no          # Activate this DB engine   # NOT FULLY IMPLEMENTED
-    file: 'db.sqlite3'  # The filename of the database
-    lookup: no          # lookup sqlite for already seen pasties
+    enable: yes          # Activer ce moteur de base de données
+    file: 'db.sqlite3'  # Le nom du fichier de la base de données
+    lookup: no          # rechercher dans sqlite les pasties déjà vus
 
   mongo:
     storage-classname:    MongoStorage
-    save: no              # Keep a copy of pasties that triggered alerts
-    save-all: no          # Keep a copy of all pasties
-    save-profile:         # configure which data to save
-      content-on-miss: no # save the content even on miss
-      timestamp: no       # add the timestamp (UTC)
-      url: no             # add the public URL
-      site: no            # add the site
-      id: no              # add the per-site id
-      matched: no         # add the matched status (usefull if content-on-miss = yes)
-      filename: no        # add the local filename (to no store content in mongodb)
-    lookup: no            # lookup mongodb for already seen pasties
+    save: no              # Conserver une copie des pasties qui ont déclenché des alertes
+    save-all: no          # Conserver une copie de tous les pasties
+    save-profile:         # configurer les données à sauvegarder
+      content-on-miss: no # sauvegarder le contenu même en cas de non-correspondance
+      timestamp: no       # ajouter l'horodatage (UTC)
+      url: no             # ajouter l'URL publique
+      site: no            # ajouter le site
+      id: no              # ajouter l'identifiant par site
+      matched: no         # ajouter le statut de correspondance (utile si content-on-miss = yes)
+      filename: no        # ajouter le nom de fichier local (pour ne pas stocker le contenu dans mongodb)
+    lookup: no            # rechercher dans mongodb les pasties déjà vus
     database: "paste"
     collection: "paste"
     url: "mongodb://localhost"
@@ -48,64 +48,49 @@ storage:
 
   redis:
     storage-classname:    RedisStorage
-    save: no             # Keep a copy of pasties that triggered alerts
-    save-all: no         # Keep a copy of all pasties
+    save: yes             # Conserver une copie des pasties qui ont déclenché des alertes
+    save-all: yes         # Conserver une copie de tous les pasties
     server: "localhost"
     port: 6379
     database: 10
-    lookup: no            # lookup redisdb for already seen pasties (NOT IMPLEMENTED)
+    lookup: no            # rechercher dans redisdb les pasties déjà vus (NON IMPLEMENTÉ)
 
   telegram:
     storage-classname:    TelegramStorage
-    enable: no            # Enable this alerting engine
-    token: 0              # see https://core.telegram.org/bots/api#authorizing-your-bot
+    enable: yes            # Activer ce moteur d'alerte
+    token: 0              # voir https://core.telegram.org/bots/api#authorizing-your-bot
     chat-id: 0
 
 email:
-  alert: no             # Enable/disable email alerts
+  alert: no             # Activer/désactiver les alertes par email
   from: alert@example.com
   to: alert@example.com
-  server: 127.0.0.1     # Address of the server (hostname or IP)
-  port: 25              # Outgoing SMTP port: 25, 587, ...
-  tls: no               # Enable/disable tls support
-  username: ''          # (optional) Username for authentication. Leave blank for no authentication.
-  password: ''          # (optional) Password for authentication. Leave blank for no authentication.
+  server: 127.0.0.1     # Adresse du serveur (nom d'hôte ou IP)
+  port: 25              # Port SMTP sortant : 25, 587, ...
+  tls: no               # Activer/désactiver le support tls
+  username: ''          # (optionnel) Nom d'utilisateur pour l'authentification. Laisser vide pour aucune authentification.
+  password: ''          # (optionnel) Mot de passe pour l'authentification. Laisser vide pour aucune authentification.
   subject: '[pystemon] - {subject}'
-  size-limit: 1048576   # Size limit for pastie, above it's sent as attachement
+  size-limit: 1048576   # Limite de taille pour le pastie, au-dessus il est envoyé en pièce jointe
 
 #####
-# Definition of regular expressions to search for in the pasties
+# Définition des expressions régulières à rechercher dans les pasties
 #
 search:
-#  - description: ''    # (optional) A human readable description used in alerts.
-#                       #            If left unspecified the search regular expression
-#                       #            will be used as description.
-#    search: ''         # The regular expression to search for. Multiple regular expressions
-#                       #            can be used under a single description.
-#    count: ''          # (optional) How many hits should it have to be interesting?
-#    exclude: ''        # (optional) Do not alert if this regular expression matches
-#    regex-flags: ''    # (optional) Regular expression flags to give to the find function.
-#                       #            Default = re.IGNORECASE
-#                       #            Set to 0 to have no flags set
-#                       #            See http://docs.python.org/2/library/re.html#re.DEBUG for more info.
-#                       #            Warning: when setting this the default is overridden
-#                       #  example: 're.MULTILINE + re.DOTALL + re.IGNORECASE'
-#    to: ''             # (optional) Additional recipients for email alert, comma separated list
-
   - search: '[^a-zA-Z0-9]example\.com'
   - search: '[^a-zA-Z0-9]foobar\.com'
-  - description: 'Download (non-p)'
+  - description: 'Téléchargement (non-porn)'
     search: 'download'
-    exclude: 'p|s|t'
+    exclude: 'porn|sex|teen'
     count: 4
 
 #####
-# Configuration section for the paste sites
+# Section de configuration pour les sites de paste
 #
-threads: 1              # number of download threads per site
+threads: 1              # nombre de threads de téléchargement par site
 site:
   pastebin.com:
-    enable: no
+    enable: yes
     archive-url: 'https://pastebin.com/archive'
     archive-regex: '<a href="/(\w{8})">.+</a></td>'
     download-url: 'https://pastebin.com/raw/{id}'
@@ -113,8 +98,8 @@ site:
     update-min: 40
     throttling: 5000
 
-  # Note: The official scraping has been discontinued: https://twitter.com/pastebin/status/1250455777069817856?s=20
-  # See https://pastebin.com/api_scraping_faq , you will need a pro account on pastebin
+  # Note : Le scraping officiel a été interrompu : https://twitter.com/pastebin/status/1250455777069817856?s=20
+  # Voir https://pastebin.com/api_scraping_faq , vous aurez besoin d'un compte pro sur pastebin
   pastebin.com_pro:
     enable: no
     archive-url: 'https://scrape.pastebin.com/api_scraping.php?limit=500'
@@ -134,16 +119,16 @@ site:
     throttling: 5000
 
   pastebin.pl:
-    enable: no
+    enable: yes
     archive-url: 'https://pastebin.pl/lists'
     archive-regex: '<td class="first"><a href="https://pastebin.pl/view/(\w+)">'
     download-url: 'https://pastebin.pl/view/download/{id}'
     throttling: 5000
 
-  # Exercise related sites
-  # this is site related to the LockedShields Cyber exercise.
+  # Sites liés aux exercices
+  # ce site est lié à l'exercice LockedShields Cyber.
   pastebin.berylia.org:
-    enable: no
+    enable: yes
     archive-url: 'https://pastebin.berylia.org/api/recent'
     archive-regex: '"pid":"([a-zA-Z0-9]+)",'
     download-url: 'https://pastebin.berylia.org/api/paste/{id}'
@@ -151,15 +136,15 @@ site:
     throttling: 5000
 
 #####
-# Configuration section to configure proxies
-# Currently only HTTP proxies are permitted
+# Section de configuration pour les proxies
+# Actuellement, seuls les proxies HTTP sont autorisés
 #
 proxy:
   random: no
   file: 'proxies.txt'
 
 #####
-# Configuration section for User-Agents
+# Section de configuration pour les User-Agents
 #
 user-agent:
   random: yes
